@@ -1,0 +1,32 @@
+%matplotlib inline
+plt.rcParams['figure.figsize'] = (15, 7)
+plt.rcParams['font.size'] = 50
+
+# setup the color for yellowbrick visulizer
+from yellowbrick.style import set_palette
+set_palette('sns_bright')
+
+# import packages
+from yellowbrick.features import ParallelCoordinates
+# Specify the features of interest and the classes of the target
+classes = ['Not-survived', 'Surivived']
+num_features = ['Age', 'SibSp', 'Parch', 'Fare']
+
+# copy data to a new dataframe
+data_norm = data.copy()
+# normalize data to 0-1 range
+for feature in num_features:
+    data_norm[feature] = (data[feature] - data[feature].mean(skipna=True)) / (data[feature].max(skipna=True) - data[feature].min(skipna=True))
+
+# Extract the numpy arrays from the data frame
+X = data_norm[num_features].as_matrix()
+y = data.Survived.as_matrix()
+
+# Instantiate the visualizer
+# Instantiate the visualizer
+visualizer = ParallelCoordinates(classes=classes, features=num_features)
+
+
+visualizer.fit(X, y)      # Fit the data to the visualizer
+visualizer.transform(X)   # Transform the data
+visualizer.poof()         # Draw/show/poof the data
